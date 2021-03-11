@@ -30,14 +30,14 @@
 
 from winappdbg import HexDump, CrashDump, System
 
-def print_state( process_name ):
 
+def print_state(process_name):
     # Request debug privileges.
     System.request_debug_privileges()
 
     # Find the first process that matches the requested name.
     system = System()
-    process, filename = system.find_processes_by_filename( process_name )[ 0 ]
+    process, filename = system.find_processes_by_filename(process_name)[0]
 
     # Suspend the process execution.
     process.suspend()
@@ -45,29 +45,30 @@ def print_state( process_name ):
 
         # For each thread in the process...
         for thread in process.iter_threads():
-
             # Get the thread state.
-            tid     = thread.get_tid()
-            eip     = thread.get_pc()
-            code    = thread.disassemble_around( eip )
+            tid = thread.get_tid()
+            eip = thread.get_pc()
+            code = thread.disassemble_around(eip)
             context = thread.get_context()
 
             # Display the thread state.
-            print
-            print "-" * 79
-            print "Thread: %s" % HexDump.integer( tid )
-            print
-            print CrashDump.dump_registers( context )
-            print CrashDump.dump_code( code, eip ),
-            print "-" * 79
+            print()
+            print("-" * 79)
+            print("Thread: %s" % HexDump.integer(tid))
+            print()
+            print(CrashDump.dump_registers(context))
+            print(CrashDump.dump_code(code, eip), )
+            print("-" * 79)
 
     # Resume the process execution.
     finally:
         process.resume()
 
+
 # When invoked from the command line,
 # each argument is a process name.
 if __name__ == "__main__":
     import sys
+
     for process_name in sys.argv[1:]:
-        print_state( process_name )
+        print_state(process_name)

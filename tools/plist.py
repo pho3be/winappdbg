@@ -63,6 +63,7 @@ try:
 except NameError:
     from winappdbg.win32 import WindowsError
 
+
 def parse_cmdline(argv):
     'Parse the command line options.'
     parser = optparse.OptionParser()
@@ -82,18 +83,19 @@ def parse_cmdline(argv):
         parser.error("unexpected parameter: %s" % argv[1])
     return (options, argv)
 
+
 def main(argv):
     'Main function.'
 
     # Print the banner.
-    print "Process enumerator"
-    print "by Mario Vilas (mvilas at gmail.com)"
-    print
+    print("Process enumerator")
+    print("by Mario Vilas (mvilas at gmail.com)")
+    print()
 
     # Parse the command line options.
-    (options, argv)  = parse_cmdline(argv)
+    (options, argv) = parse_cmdline(argv)
     showFilenameOnly = not options.full_path
-    searchString     = options.search
+    searchString = options.search
 
     # Windows filenames are case insensitive.
     if searchString:
@@ -111,7 +113,7 @@ def main(argv):
     pid_list = s.get_process_ids()
     pid_list.sort()
     if not pid_list:
-        print "Unknown error enumerating processes!"
+        print("Unknown error enumerating processes!")
         return
 
     # Get the filename of each process.
@@ -179,8 +181,8 @@ def main(argv):
                     srvset = set()
                     srvset.add(descriptor.ServiceName)
                     services[descriptor.ProcessId] = srvset
-        except WindowsError, e:
-            print "Error getting the list of services: %s" % str(e)
+        except WindowsError as e:
+            print("Error getting the list of services: %s" % str(e))
             return
 
     if options.format == "auto":
@@ -197,13 +199,13 @@ def main(argv):
         for pid in pid_list:
             if pid in filenames:
                 fileName = filenames[pid]
-                caplist = sorted( captions.get(pid, set()) )
-                srvlist = sorted( services.get(pid, set()) )
+                caplist = sorted(captions.get(pid, set()))
+                srvlist = sorted(services.get(pid, set()))
                 if options.windows and options.services:
                     if len(caplist) < len(srvlist):
-                        caplist.extend( [''] * (len(srvlist) - len(caplist)) )
+                        caplist.extend([''] * (len(srvlist) - len(caplist)))
                     elif len(srvlist) < len(caplist):
-                        srvlist.extend( [''] * (len(caplist) - len(srvlist)) )
+                        srvlist.extend([''] * (len(caplist) - len(srvlist)))
                     if len(caplist):
                         table.addRow(' %d' % pid, fileName, caplist[0], srvlist[0])
                         for i in range(1, len(caplist)):
@@ -248,13 +250,13 @@ def main(argv):
                 fileName = filenames[pid]
                 if fileName:
                     table.addRow("Filename:", fileName)
-                caplist = sorted( captions.get(pid, set()) )
+                caplist = sorted(captions.get(pid, set()))
                 if caplist:
                     caption = caplist.pop(0)
                     table.addRow("Windows:", caption)
                     for caption in caplist:
                         table.addRow('', caption)
-                srvlist = sorted( services.get(pid, set()) )
+                srvlist = sorted(services.get(pid, set()))
                 if srvlist:
                     srvname = srvlist.pop(0)
                     table.addRow("Services:", srvname)
@@ -263,10 +265,13 @@ def main(argv):
         table.justify(0, 1)
         table.show()
 
+
 if __name__ == '__main__':
     import sys
+
     try:
         import psyco
+
         psyco.full()
     except ImportError:
         pass

@@ -1381,12 +1381,12 @@ class Process (_ThreadContainer, _ModuleContainer):
         @raise WindowsError: An error occurred when querying or reading the
             process memory.
         """
-        if isinstance(pattern, str):
+        if isinstance(pattern, bytes):
             if HexInput.is_pattern(pattern):
                 return Search.search_process(
                     self, [pattern], minAddr, maxAddr)
             return self.search_bytes(pattern, minAddr, maxAddr)
-        if isinstance(pattern, unicode):
+        if isinstance(pattern, str):
             return self.search_bytes(
                 pattern.encode("utf-16le"), minAddr, maxAddr)
         if isinstance(pattern, Pattern):
@@ -2113,7 +2113,8 @@ class Process (_ThreadContainer, _ModuleContainer):
         @return: Number of bytes written.
             May be less than the number of bytes to write.
         """
-        return self.poke(lpBaseAddress, chr(char))
+        # return self.poke(lpBaseAddress, chr(char))
+        return self.poke(lpBaseAddress, bytes([char]))
 
     def peek_int(self, lpBaseAddress):
         """

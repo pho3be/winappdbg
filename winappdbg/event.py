@@ -1398,7 +1398,7 @@ class EventHandler (object):
         for lib, hooks in self.apiHooks.items():
             hook_objs = []
             for proc, args in hooks:
-                if type(args) in (int):
+                if type(args) == tuple and int in (type(a) for a in args):
                     h = ApiHook(self, lib, proc, paramCount = args)
                 else:
                     h = ApiHook(self, lib, proc,  signature = args)
@@ -1849,7 +1849,7 @@ class EventDispatcher (object):
                 except Exception as e:
                     msg = ("Event handler pre-callback %r"
                            " raised an exception: %s")
-                    msg = msg % (self.__eventHandler, traceback.format_exc(e))
+                    msg = msg % (self.__eventHandler, traceback.format_exc(16, e))
                     warnings.warn(msg, EventCallbackWarning)
                     returnValue = None
 

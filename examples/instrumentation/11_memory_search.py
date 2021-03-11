@@ -52,5 +52,5 @@ def memory_search( pid, bytes ):
 if __name__ == "__main__":
     import sys
     pid   = int( sys.argv[1] )
-    _bytes = sys.argv[2]
+    _bytes = sys.argv[2].encode()
     memory_search( pid, _bytes )

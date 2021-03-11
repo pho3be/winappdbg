@@ -4625,7 +4625,7 @@ def GlobalGetAtomNameA(nAtom):
 
     nSize = 64
     while 1:
-        lpBuffer = ctypes.create_string_buffer("", nSize)
+        lpBuffer = ctypes.create_string_buffer(b"", nSize)
         nCopied  = _GlobalGetAtomNameA(nAtom, lpBuffer, nSize)
         if nCopied < nSize - 1:
             break

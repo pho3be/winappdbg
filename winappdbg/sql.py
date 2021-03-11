@@ -52,9 +52,9 @@ from sqlalchemy.types import Integer, BigInteger, Boolean, DateTime, String, \
                              LargeBinary, Enum, VARCHAR
 from sqlalchemy.sql.expression import asc, desc
 
-from crash import Crash, Marshaller, pickle
-from textio import CrashDump
-import win32
+from .crash import Crash, Marshaller, pickle
+from .textio import CrashDump
+from . import win32
 
 #------------------------------------------------------------------------------
 

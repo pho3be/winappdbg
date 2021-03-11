@@ -187,12 +187,12 @@ class Window (object):
     def __load_Process_class(self):
         global Process      # delayed import
         if Process is None:
-            from process import Process
+            from .process import Process
 
     def __load_Thread_class(self):
         global Thread       # delayed import
         if Thread is None:
-            from thread import Thread
+            from .tthread import Thread
 
     def get_process(self):
         """

@@ -41,41 +41,39 @@ if Color.can_use_colors():
         Color.bk_black()
 
         # For each color...
-        for color in ( "red", "green", "blue", "cyan", "magenta", "yellow", "white" ):
+        for color in ("red", "green", "blue", "cyan", "magenta", "yellow", "white"):
 
             # Set the color.
-            function = getattr( Color, color )
+            function = getattr(Color, color)
             function()
 
             # For each intensity...
-            for intensity in ( "light", "dark" ):
-
+            for intensity in ("light", "dark"):
                 # Set the intensity.
-                function = getattr( Color, intensity )
+                function = getattr(Color, intensity)
                 function()
 
                 # Print a message.
-                print "This is %s %s text on black background." % ( intensity, color )
+                print("This is %s %s text on black background." % (intensity, color))
 
         # Set black text.
         Color.black()
 
         # For each color...
-        for color in ( "red", "green", "blue", "cyan", "magenta", "yellow", "white" ):
+        for color in ("red", "green", "blue", "cyan", "magenta", "yellow", "white"):
 
             # Set the background color.
-            function = getattr( Color, "bk_" + color )
+            function = getattr(Color, "bk_" + color)
             function()
 
             # For each intensity...
-            for intensity in ( "light", "dark" ):
-
+            for intensity in ("light", "dark"):
                 # Set the background intensity.
-                function = getattr( Color, "bk_" + intensity )
+                function = getattr(Color, "bk_" + intensity)
                 function()
 
                 # Print a message.
-                print "This is black text on %s %s background." % ( intensity, color )
+                print("This is black text on %s %s background." % (intensity, color))
 
     # Reset the console colors and quit.
     finally:
@@ -83,4 +81,4 @@ if Color.can_use_colors():
 
 # No colors available!
 else:
-    print "Can't use colors! Are you redirecting the output to a file?"
+    print("Can't use colors! Are you redirecting the output to a file?")

@@ -175,7 +175,7 @@ def GetDeviceDriverBaseNameA(ImageBase):
 
     nSize = MAX_PATH
     while 1:
-        lpBaseName = ctypes.create_string_buffer("", nSize)
+        lpBaseName = ctypes.create_string_buffer(b"", nSize)
         nCopied = _GetDeviceDriverBaseNameA(ImageBase, lpBaseName, nSize)
         if nCopied == 0:
             raise ctypes.WinError()
@@ -214,7 +214,7 @@ def GetDeviceDriverFileNameA(ImageBase):
 
     nSize = MAX_PATH
     while 1:
-        lpFilename = ctypes.create_string_buffer("", nSize)
+        lpFilename = ctypes.create_string_buffer(b"", nSize)
         nCopied = ctypes.windll.psapi.GetDeviceDriverFileNameA(ImageBase, lpFilename, nSize)
         if nCopied == 0:
             raise ctypes.WinError()
@@ -254,7 +254,7 @@ def GetMappedFileNameA(hProcess, lpv):
 
     nSize = MAX_PATH
     while 1:
-        lpFilename = ctypes.create_string_buffer("", nSize)
+        lpFilename = ctypes.create_string_buffer(b"", nSize)
         nCopied = _GetMappedFileNameA(hProcess, lpv, lpFilename, nSize)
         if nCopied == 0:
             raise ctypes.WinError()
@@ -294,7 +294,7 @@ def GetModuleFileNameExA(hProcess, hModule = None):
 
     nSize = MAX_PATH
     while 1:
-        lpFilename = ctypes.create_string_buffer("", nSize)
+        lpFilename = ctypes.create_string_buffer(b"", nSize)
         nCopied = _GetModuleFileNameExA(hProcess, hModule, lpFilename, nSize)
         if nCopied == 0:
             raise ctypes.WinError()
@@ -350,7 +350,7 @@ def GetProcessImageFileNameA(hProcess):
 
     nSize = MAX_PATH
     while 1:
-        lpFilename = ctypes.create_string_buffer("", nSize)
+        lpFilename = ctypes.create_string_buffer(b"", nSize)
         nCopied = _GetProcessImageFileNameA(hProcess, lpFilename, nSize)
         if nCopied == 0:
             raise ctypes.WinError()

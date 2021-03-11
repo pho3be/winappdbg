@@ -44,8 +44,13 @@ def print_label_address( pid, label ):
     # Resolve the requested label address.
     address = process.resolve_label( label )
 
+    # titles = [i for i in process.search("Trying to change notepad text\0")]
+    # msg = [k for k in 'New text here ! \0']
+    # for i in range(len(msg)):
+    #     process.poke(46859072 + i * 2, msg[i].encode())
+
     # Print the address.
-    print "%s == 0x%.08x" % ( label, address )
+    print ("%s == 0x%.08x" % ( label, address ))
 
 # When invoked from the command line,
 # the first argument is a process ID,

@@ -442,7 +442,8 @@ class Crash (object):
         self.pid                = event.get_pid()
         self.tid                = event.get_tid()
         self.registers          = dict(thread.get_context())
-        self.labelPC            = process.get_label_at_address(self.pc)
+        self.labelPC            = str(self.pc)
+        #FIXME: self.labelPC            = process.get_label_at_address(self.pc)
 
         # The following properties are only retrieved for some events.
         self.commandLine        = None
@@ -505,15 +506,17 @@ class Crash (object):
             self.exceptionDescription   = event.get_exception_description()
             self.exceptionAddress       = event.get_exception_address()
             self.firstChance            = event.is_first_chance()
-            self.exceptionLabel         = process.get_label_at_address(
-                                                         self.exceptionAddress)
+            self.exceptionLabel         = str(self.exceptionAddress)
+            #FIXME: self.exceptionLabel         = process.get_label_at_address(
+            #                                              self.exceptionAddress)
             if self.exceptionCode in (win32.EXCEPTION_ACCESS_VIOLATION,
                                       win32.EXCEPTION_GUARD_PAGE,
                                       win32.EXCEPTION_IN_PAGE_ERROR):
                 self.faultType    = event.get_fault_type()
                 self.faultAddress = event.get_fault_address()
-                self.faultLabel   = process.get_label_at_address(
-                                                            self.faultAddress)
+                self.faultLabel   = str(self.faultAddress)
+                #FIXME: self.faultLabel   = process.get_label_at_address(
+                #                                             self.faultAddress)
             elif self.exceptionCode in (win32.EXCEPTION_BREAKPOINT,
                                         win32.EXCEPTION_SINGLE_STEP):
                 self.isOurBreakpoint = hasattr(event, 'breakpoint') \

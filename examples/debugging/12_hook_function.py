@@ -29,52 +29,79 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 from winappdbg import Debug, EventHandler
-from winappdbg.win32 import PVOID
+from winappdbg.win32 import *
 
 
 # This function will be called when the hooked function is entered.
-def wsprintf( event, ra, lpOut, lpFmt ):
-
+def wsprintf(event, ra, lpOut, lpFmt):
     # Get the format string.
     process = event.get_process()
-    lpFmt   = process.peek_string( lpFmt, fUnicode = True )
+    lpFmt = process.peek_string(lpFmt, fUnicode=True)
 
     # Get the vararg parameters.
-    count      = lpFmt.replace( '%%', '%' ).count( '%' )
-    thread     = event.get_thread()
+    count = lpFmt.replace('%%', '%').count('%')
+    thread = event.get_thread()
     if process.get_bits() == 32:
-        parameters = thread.read_stack_dwords( count, offset = 3 )
+        parameters = thread.read_stack_dwords(count, offset=3)
     else:
-        parameters = thread.read_stack_qwords( count, offset = 3 )
+        parameters = thread.read_stack_qwords(count, offset=3)
 
     # Show a message to the user.
-    showparams = ", ".join( [ hex(x) for x in parameters ] )
-    print ("wsprintf( %r, %s );" % ( lpFmt, showparams ))
+    showparams = ", ".join([hex(x) for x in parameters])
+    print("wsprintf( %r, %s );" % (lpFmt, showparams))
 
 
-class MyEventHandler( EventHandler ):
+def createFileW(event, ra, lpFileName, dwDesiredAccess,
+                dwShareMode, lpSecurityAttributes, dwCreationDisposition,
+                dwFlagsAndAttributes, hTemplateFile):
+    # Get the format string.
+    process = event.get_process()
 
-    def load_dll( self, event ):
+    old_string = event.get_process().peek_string(lpFileName, fUnicode=True)
+    tid = event.get_tid()
+    print('Open ' + old_string)
+
+    try:
+        event.get_process().poke(lpFileName + 172, b'd')
+    except Exception as e:
+        pass
+
+    string = event.get_process().peek_string(lpFileName, fUnicode=True)
+    print('Open now ' + string)
+
+    print("TODO: createFileW")
+
+
+class MyEventHandler(EventHandler):
+
+    def load_dll(self, event):
 
         # Get the new module object.
         module = event.get_module()
 
+        if module.match_name("kernel32.dll"):
+            pid = event.get_pid()
+
+            address = module.resolve("CreateFileW")
+
+            signature = (PVOID, DWORD, DWORD, PVOID, DWORD, DWORD, HANDLE)
+            event.debug.hook_function(pid, address, createFileW, signature=signature)
+
         # If it's user32...
         if module.match_name("user32.dll"):
-
             # Get the process ID.
             pid = event.get_pid()
 
             # Get the address of wsprintf.
-            address = module.resolve( "wsprintfW" )
+            address = module.resolve("wsprintfW")
 
             # This is an approximated signature of the wsprintf function.
             # Pointers must be void so ctypes doesn't try to read from them.
             # Varargs are obviously not included.
-            signature = ( PVOID, PVOID )
+            signature = (PVOID, PVOID)
 
             # Hook the wsprintf function.
-            event.debug.hook_function( pid, address, wsprintf, signature = signature)
+            event.debug.hook_function(pid, address, wsprintf, signature=signature)
 
             # Use stalk_function instead of hook_function
             # to be notified only the first time the function is called.
@@ -82,13 +109,11 @@ class MyEventHandler( EventHandler ):
             # event.debug.stalk_function( pid, address, wsprintf, signature = signature)
 
 
-def simple_debugger( argv ):
-
+def simple_debugger(argv):
     # Instance a Debug object, passing it the MyEventHandler instance.
-    with Debug( MyEventHandler(), bKillOnExit = True ) as debug:
-
+    with Debug(MyEventHandler(), bKillOnExit=True) as debug:
         # Start a new process for debugging.
-        debug.execv( argv )
+        debug.execv(argv)
 
         # Wait for the debugee to finish.
         debug.loop()
@@ -99,4 +124,5 @@ def simple_debugger( argv ):
 # and the remaining arguments are passed to the newly created process.
 if __name__ == "__main__":
     import sys
-    simple_debugger( sys.argv[1:] )
+
+    simple_debugger(sys.argv[1:])

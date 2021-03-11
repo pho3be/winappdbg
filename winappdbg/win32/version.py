@@ -150,9 +150,9 @@ def GetFileVersionInfoA(lptstrFilename):
     _GetFileVersionInfoSizeA.restype  = DWORD
     _GetFileVersionInfoSizeA.errcheck = RaiseIfZero
 
-    dwLen = _GetFileVersionInfoSizeA(lptstrFilename, None)
+    dwLen = _GetFileVersionInfoSizeA(lptstrFilename.encode(), None)
     lpData = ctypes.create_string_buffer(dwLen)
-    _GetFileVersionInfoA(lptstrFilename, 0, dwLen, byref(lpData))
+    _GetFileVersionInfoA(lptstrFilename.encode(), 0, dwLen, byref(lpData))
     return lpData
 
 def GetFileVersionInfoW(lptstrFilename):
@@ -187,7 +187,7 @@ def VerQueryValueA(pBlock, lpSubBlock):
 
     lpBuffer = LPVOID(0)
     uLen = UINT(0)
-    _VerQueryValueA(pBlock, lpSubBlock, byref(lpBuffer), byref(uLen))
+    _VerQueryValueA(pBlock, lpSubBlock.encode(), byref(lpBuffer), byref(uLen))
     return lpBuffer, uLen.value
 
 def VerQueryValueW(pBlock, lpSubBlock):

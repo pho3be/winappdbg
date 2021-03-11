@@ -28,27 +28,28 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-import mock
+from unittest import mock
 import unittest
 import winappdbg
+
 
 class ModuleTests(unittest.TestCase):
 
     def assertSymbolAtAddressEqual(self, address, symbol):
         self.assertEqual(winappdbg.Module(0).get_symbol_at_address(address),
-                        symbol)
+                         symbol)
 
     @mock.patch('winappdbg.Module.iter_symbols')
     def test_get_symbol_at_address(self, mock_iter_symbols):
         mock_iter_symbols.return_value = [("matchPattern", 0x002A, 0x10),
-                                        ("isMatched", 0xFF42, 0x0090),
-                                        ("__ii_95", 0x0102, 0),
-                                        ("groupSize", 0x000A, 0),
-                                        ("__ref_thesaurus", 0x1000, 0x07F0),
-                                        ("iter_int32", 0x009E, 0x00A4),
-                                        ("__jj_49", 0x0140, 0),
-                                        ("numGroups", 0x001F, 0),
-                                        ("__comp_state", 0x003C, 0x0004)]
+                                          ("isMatched", 0xFF42, 0x0090),
+                                          ("__ii_95", 0x0102, 0),
+                                          ("groupSize", 0x000A, 0),
+                                          ("__ref_thesaurus", 0x1000, 0x07F0),
+                                          ("iter_int32", 0x009E, 0x00A4),
+                                          ("__jj_49", 0x0140, 0),
+                                          ("numGroups", 0x001F, 0),
+                                          ("__comp_state", 0x003C, 0x0004)]
 
         self.assertSymbolAtAddressEqual(0x000A, ("groupSize", 0x000A, 0))
         self.assertSymbolAtAddressEqual(0x0029, ("numGroups", 0x001F, 0))

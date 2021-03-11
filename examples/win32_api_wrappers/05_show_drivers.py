@@ -30,8 +30,8 @@
 
 from winappdbg.win32 import *  # NOQA
 
-def print_drivers( fFullPath = False ):
 
+def print_drivers(fFullPath=False):
     # Determine if we have 32 bit or 64 bit pointers.
     if sizeof(SIZE_T) == sizeof(DWORD):
         fmt = "%.08x\t%s"
@@ -42,9 +42,9 @@ def print_drivers( fFullPath = False ):
 
     # Get the list of loaded device drivers.
     ImageBaseList = EnumDeviceDrivers()
-    print "Device drivers found: %d" % len(ImageBaseList)
-    print
-    print hdr % ("Image base", "File name")
+    print("Device drivers found: %d" % len(ImageBaseList))
+    print()
+    print(hdr % ("Image base", "File name"))
 
     # For each device driver...
     for ImageBase in ImageBaseList:
@@ -56,11 +56,13 @@ def print_drivers( fFullPath = False ):
             DriverName = GetDeviceDriverBaseName(ImageBase)
 
         # Print the device driver image base and filename.
-        print fmt % (ImageBase, DriverName)
+        print(fmt % (ImageBase, DriverName))
+
 
 # When invoked from the command line,
 # -f means show full pathnames instead of base filenames.
 if __name__ == "__main__":
     import sys
+
     fFullPath = '-f' in sys.argv[1:]
-    print_drivers( fFullPath )
+    print_drivers(fFullPath)
